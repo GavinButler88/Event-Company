@@ -1,0 +1,108 @@
+package com.example.app.model;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Model {
+
+    private static Model instance = null;
+
+    public static synchronized Model getInstance() {
+        if (instance == null) {
+            instance = new Model();
+        }
+        return instance;
+    }
+
+    private List<Event> events;
+    private EventTableGateway gateway;
+
+    private Model() {
+
+        try {
+            Connection conn = DBConnection.getInstance();
+            this.gateway = new EventTableGateway(conn);
+
+            this.events = this.gateway.getEvents();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public List<Event> getEvents() {
+        return this.events;
+    }
+
+    //completes process of adding event to the database
+
+    public void addEvent(Event e) {
+        try {
+            int id = this.gateway.insertEvent(
+                    e.getTitle(), e.getDescription(), e.getStartDate(),
+                    e.getTime(), e.getEndDate(), e.getMaxCapacity(), e.getPrice());
+            e.setEventID(id);
+            this.events.add(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //method to remove event
+
+    public boolean removeEvent(Event p) {
+        boolean removed = false;
+
+        try {       //use gateway object to try remove event
+            removed = this.gateway.deleteEvent(p.getEventID());
+            if (removed) {
+                removed = this.events.remove(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //boolean returns true if event is deleted from database and array list
+        return removed;
+    }
+
+    public Event findEventByPrice(double price) {
+        //e is assigned to each event in the list
+        Event e = null;
+        int i = 0;
+        //found checks to see the correct specified price
+        boolean found = false;
+        while (i < this.events.size() && !found) {
+            e = this.events.get(i);
+            //checks to see price entered is equal to what we are looking for
+            if (e.getPrice() == price) {
+                found = true;
+            } else {
+                i++;
+            }
+        }
+        if (!found) {
+            e = null;
+        }
+        return e;
+    }
+
+    //UPDATE EVENT
+    boolean updateEvent(Event e) {
+        boolean updated = false;
+
+        try {
+            //method calls on gateway update method which returns true/false value and is then returned
+            updated = this.gateway.updateEvent(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return updated;
+
+    }
+}

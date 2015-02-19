@@ -1,0 +1,273 @@
+package com.example.app.model;
+
+import java.sql.Date;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class DemoApp {
+
+    public static void main(String[] args) {
+        Scanner keyboard = new Scanner(System.in);
+
+        Model model = Model.getInstance();
+
+        Event e;
+
+        int opt;
+        do {
+            //user interface menu
+            System.out.println("1. Create new Event");
+            System.out.println("2. Delete existing Event");
+            System.out.println("3. Edit Events");
+            System.out.println("4. View all Events");
+            System.out.println("5. Exit");
+            System.out.println();
+               //where the user will input their choice of method
+            // methods contained elsewhere on page
+            System.out.print("Enter option: ");
+            String line = keyboard.nextLine();
+            opt = Integer.parseInt(line);
+            //cases which allow user to manipulate databese
+            System.out.println("You chose option " + opt);
+            //switch used to print message to user based on their selection
+            switch (opt) { //
+                case 1: {
+                    System.out.println("Creating event");
+                    Event p = readEvent(keyboard);
+                    model.addEvent(p);
+
+                    break;
+                }
+                case 2: {
+                    //prompts user an option to delete 
+                    System.out.println("Deleting event");
+                    System.out.println("Enter the price of the event to delete");
+                    //variable is read as a string and parsed into a double
+                    double price = Double.parseDouble(keyboard.nextLine());
+                    Event p;
+                    //seperate method used to decipher which event to delete
+                    p = model.findEventByPrice(price);
+                    if (p != null) {
+                        if (model.removeEvent(p)) {
+                            System.out.println("Event deleted");
+                        } else {
+                            System.out.println("Event not deleted");
+                        }
+                    } else {
+                        System.out.println("Event not found");
+                    }
+
+                    break;
+                }
+
+                case 3: {
+                    System.out.println("Editing event");
+                    editEvent(keyboard, model);
+                    break;
+                }
+                case 4: {
+                    System.out.println("Viewing events");
+                    viewEvents(model);
+                    break;
+                }
+            }
+        } while (opt != 5);
+        System.out.println("Goodbye");
+    }
+
+    //allows user to edit an event
+    private static void editEvent(Scanner kb, Model m) {
+        System.out.println("Enter the price of the event you want to edit: ");
+        int price = Integer.parseInt(kb.nextLine());
+        Event e;
+
+        e = m.findEventByPrice(price);
+        //if price entered in not 0 then run other methods
+        if (e != null) {
+            editEventDetails(kb, e);
+            if (m.updateEvent(e)) {
+                System.out.println("Event updated");
+            } else {
+                System.out.println("Event not updated");
+            }
+        }
+    }
+
+    //this code allows me to read an event and store it in a database
+
+    private static Event readEvent(Scanner keyb) {
+        String Title, Description;
+        int MaxCapacity;
+        Date startDate, endDate;
+        Time time;
+        double Price;
+        String line;
+
+        java.util.Date now = new java.util.Date();
+        //formatting the date and time aspects which the user enters
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+        //user enters details of event into the prompts 
+        Title = getString(keyb, "Enter title: ");
+        Description = getString(keyb, "Enter description: ");
+
+        line = getString(keyb, "enter start date (YYYY-MM-DD): ");
+        try {
+            startDate = new Date(dateFormatter.parse(line).getTime());
+        } catch (ParseException ex) {
+            startDate = new Date(now.getTime());
+        }
+
+        line = getString(keyb, "enter time (HH:MM:SS): ");
+        try {
+            time = new Time(timeFormatter.parse(line).getTime());
+        } catch (ParseException ex) {
+            time = new Time(now.getTime());
+        }
+
+        line = getString(keyb, "Enter end date (YYYY-MM-DD): ");
+        try {
+            endDate = new Date(dateFormatter.parse(line).getTime());
+        } catch (ParseException ex) {
+            endDate = new Date(now.getTime());
+        }
+
+        line = getString(keyb, "enter maximum capacity: ");
+        MaxCapacity = Integer.parseInt(line);
+        line = getString(keyb, "enter price: ");
+        Price = Double.parseDouble(line);
+
+        Event e
+                = new Event(Title, Description, startDate,
+                        time, endDate, MaxCapacity, Price);
+
+        return e;
+    }
+
+    //method to read user input as a string
+
+    private static String getString(Scanner keyboard, String prompt) {
+        System.out.print(prompt);
+        return keyboard.nextLine();
+    }
+
+    private static void deleteEvent(Scanner kb, Model m) {
+        System.out.print("Enter price of the event to delete:");
+        int price = Integer.parseInt(kb.nextLine());
+        Event p;
+
+        p = m.findEventByPrice(price);
+        if (p != null) {
+            if (m.removeEvent(p)) {
+                System.out.println("Event deleted");
+            } else {
+                System.out.println("Event not deleted");
+            }
+        } else {
+            System.out.println("Event not found");
+        }
+    }
+
+    //EDIT EVENT
+    private static void editEventDetails(Scanner keyb, Event e) {
+        String title, description;
+        int maxCapacity;
+        Date startDate, endDate;
+        Time time;
+        double price;
+        String line1, line2, line3, line4, line5;
+
+        java.util.Date now = new java.util.Date();
+        //formats type time and date
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+        //where user will enter details to edit
+        line1 = getString(keyb, "Enter title [" + e.getTitle() + "]: ");
+        line5 = getString(keyb, "Enter description [" + e.getDescription() + "]: ");
+
+        line2 = getString(keyb, "enter start date (YYYY-MM-DD): ");
+
+        line3 = getString(keyb, "enter time (HH:MM:SS): ");
+
+        line4 = getString(keyb, "Enter end date (YYYY-MM-DD): ");
+        //if the details of the event have been atlered then it becomes the new value
+        if (line1.length() != 0) {
+            e.setTitle(line1);
+        }
+
+        if (line5.length() != 0) {
+            e.setDescription(line5);
+        }
+
+        if (line2.length() != 0) {
+            try {
+                startDate = new Date(dateFormatter.parse(line2).getTime());
+            } catch (ParseException ex) {
+                startDate = new Date(now.getTime());
+            }
+            e.setStartDate(startDate);
+        }
+
+        if (line3.length() != 0) {
+            try {
+                time = new Time(timeFormatter.parse(line3).getTime());
+            } catch (ParseException ex) {
+                time = new Time(now.getTime());
+            }
+            e.setTime(time);
+        }
+
+        if (line4.length() != 0) {
+            try {
+                endDate = new Date(dateFormatter.parse(line4).getTime());
+            } catch (ParseException ex) {
+                endDate = new Date(now.getTime());
+            }
+            e.setEndDate(endDate);
+        }
+
+        if (line1.length() != 0) {
+            maxCapacity = Integer.parseInt(line1);
+            e.setMaxCapacity(maxCapacity);
+        }
+
+        if (line5.length() != 0) {
+            price = Double.parseDouble(line5);
+            e.setPrice(price);
+        }
+    }
+
+    //VIEW EVENT
+    //prints table of events to the user
+    private static void viewEvents(Model model) {
+        List<Event> events = model.getEvents();
+        System.out.println();
+        if (!events.isEmpty()) {
+            //formats the table appropriately
+            System.out.printf("%5s %20s  %30s  %25s  %22s  %20s %20s %18s\n", "ID", "Title", "Description", "Start Date", "Time", "End Date", "Max Capacity", "Price");
+            for (Event ev : events) {
+                System.out.printf("%5d %20s  %30s  %25s  %22s  %20s %20d %18.2f\n",
+                        ev.getEventID(),
+                        ev.getTitle(),
+                        ev.getDescription(),
+                        ev.getStartDate(),
+                        ev.getTime(),
+                        ev.getEndDate(),
+                        ev.getMaxCapacity(),
+                        ev.getPrice());
+
+            }
+        } else {
+            System.out.println("There are no events in your database");
+        }
+        System.out.println();
+    }
+
+}
