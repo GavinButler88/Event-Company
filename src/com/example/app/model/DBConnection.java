@@ -6,9 +6,10 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    private static Connection sConnection;
+//new comment
+private static Connection sConnection;
 
-    //in here creates a connection and reacts appropriately whether a connection is established or not
+    //here creates a connection and reacts appropriately whether a connection is established or not
 
     public static Connection getInstance() throws ClassNotFoundException, SQLException {
         String host, db, user, password;
