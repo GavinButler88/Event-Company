@@ -8,9 +8,9 @@ public class DBConnection {
 
 //new comment
 private static Connection sConnection;
-
+    
     //here creates a connection and reacts appropriately whether a connection is established or not
-
+    //another comment
     public static Connection getInstance() throws ClassNotFoundException, SQLException {
         String host, db, user, password;
         //my details to connect to the right database
