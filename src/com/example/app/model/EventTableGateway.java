@@ -158,7 +158,7 @@ public class EventTableGateway {
         //variable which holds the value or rows affected(deleted)
         int numRowsAffected;
 
-        query = "DELETE FROM " + TABLE_NAME + " WHERE " + " = ? ";
+        query = "DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_EVENTID + " = ? ";
 
         stmt = mConnection.prepareStatement(query);
         stmt.setInt(1, eventID);

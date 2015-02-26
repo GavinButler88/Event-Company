@@ -15,8 +15,7 @@ public class Event {
     private double price;
 
     public Event(int eventID, String t, String d, Date sd, Time tm, Date ed, int mc, double p) {
-        int eid = 0;
-        this.eventID = eid;
+        this.eventID = eventID;
         this.title = t;
         this.description = d;
         this.startDate = sd;

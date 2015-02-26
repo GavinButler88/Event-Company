@@ -48,12 +48,12 @@ public class DemoApp {
                 case 2: {
                     //prompts user an option to delete 
                     System.out.println("Deleting event");
-                    System.out.println("Enter the price of the event to delete");
+                    System.out.println("Enter the id of the event to delete");
                     //variable is read as a string and parsed into a double
-                    double price = Double.parseDouble(keyboard.nextLine());
+                    int id = Integer.parseInt(keyboard.nextLine());
                     Event p;
                     //seperate method used to decipher which event to delete
-                    p = model.findEventByPrice(price);
+                    p = model.findEventById(id);
                     if (p != null) {
                         if (model.removeEvent(p)) {
                             System.out.println("Event deleted");
@@ -84,11 +84,11 @@ public class DemoApp {
 
     //allows user to edit an event
     private static void editEvent(Scanner kb, Model m) {
-        System.out.println("Enter the price of the event you want to edit: ");
-        int price = Integer.parseInt(kb.nextLine());
+        System.out.println("Enter the id of the event you want to edit: ");
+        int id = Integer.parseInt(kb.nextLine());
         Event e;
 
-        e = m.findEventByPrice(price);
+        e = m.findEventById(id);
         //if price entered in not 0 then run other methods
         if (e != null) {
             editEventDetails(kb, e);
@@ -160,10 +160,10 @@ public class DemoApp {
 
     private static void deleteEvent(Scanner kb, Model m) {
         System.out.print("Enter price of the event to delete:");
-        int price = Integer.parseInt(kb.nextLine());
+        int id = Integer.parseInt(kb.nextLine());
         Event p;
 
-        p = m.findEventByPrice(price);
+        p = m.findEventById(id);
         if (p != null) {
             if (m.removeEvent(p)) {
                 System.out.println("Event deleted");

@@ -70,7 +70,7 @@ public class Model {
         return removed;
     }
 
-    public Event findEventByPrice(double price) {
+    public Event findEventById(int id) {
         //e is assigned to each event in the list
         Event e = null;
         int i = 0;
@@ -79,7 +79,7 @@ public class Model {
         while (i < this.events.size() && !found) {
             e = this.events.get(i);
             //checks to see price entered is equal to what we are looking for
-            if (e.getPrice() == price) {
+            if (e.getEventID() == id) {
                 found = true;
             } else {
                 i++;
