@@ -21,6 +21,7 @@ public class EventTableGateway {
     private static final String COLUMN_ENDDATE = "EndDate";
     private static final String COLUMN_MAXCAPACITY = "MaxCapacity";
     private static final String COLUMN_PRICE = "Price";
+    private static final String COLUMN_LOCATION_ID = "LocationID";
 
     private Connection mConnection;
 
@@ -28,7 +29,7 @@ public class EventTableGateway {
         mConnection = connection;
     }
 
-    public int insertEvent(String t, String d, Date sd, Time tm, Date ed, int mc, double p) throws SQLException {
+    public int insertEvent(String t, String d, Date sd, Time tm, Date ed, int mc, double p, int lId) throws SQLException {
         Event e = null;
 
         String query;       // the SQL query to execute
@@ -44,8 +45,10 @@ public class EventTableGateway {
                 + COLUMN_TIME + ", "
                 + COLUMN_ENDDATE + ", "
                 + COLUMN_MAXCAPACITY + ", "
-                + COLUMN_PRICE
-                + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
+                + COLUMN_PRICE + ", "
+                + COLUMN_LOCATION_ID +
+                
+                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         // create a PreparedStatement object to execute the query and insert the values into the query
         stmt = mConnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -56,6 +59,12 @@ public class EventTableGateway {
         stmt.setDate(5, ed);
         stmt.setInt(6, mc);
         stmt.setDouble(7, p);
+        if (lId == -1) {
+            stmt.setNull(8, java.sql.Types.INTEGER)
+        }
+        else{
+            stmt.setInt(8, lId);
+        }
 
         //  execute the query and make sure that one and only one row was inserted into the database
         numRowsAffected = stmt.executeUpdate();
@@ -66,7 +75,7 @@ public class EventTableGateway {
 
             id = keys.getInt(1);
 
-            e = new Event(t, d, sd, tm, ed, mc, p);
+            e = new Event(t, d, sd, tm, ed, mc, p, lId);
         }
 
         // return the Programmer object created or null if there was a problem
@@ -83,7 +92,7 @@ public class EventTableGateway {
         // in the result of the query the id of a programmer
 
         String title, description;
-        int eventID, maxCapacity;
+        int eventID, maxCapacity, locationID;
         Date startDate, endDate;
         Time time;
         double price;
@@ -109,8 +118,12 @@ public class EventTableGateway {
             endDate = rs.getDate(COLUMN_ENDDATE);
             maxCapacity = rs.getInt(COLUMN_MAXCAPACITY);
             price = rs.getDouble(COLUMN_PRICE);
+            locationID = rs.getInt(COLUMN_LOCATION_ID);
+            if (rs.wasNull()) {
+                locationID = -1;
+            }
 
-            e = new Event(eventID, title, description, startDate, time, endDate, maxCapacity, price);
+            e = new Event(eventID, title, description, startDate, time, endDate, maxCapacity, price, locationID);
             events.add(e);
         }
 
@@ -123,6 +136,7 @@ public class EventTableGateway {
         String query;
         PreparedStatement stmt;
         int numRowsAffected;
+        int lId;
         //format of edit table including placeholders
         query = "UPDATE " + TABLE_NAME + " SET "
                 + COLUMN_TITLE + " = ?, "
@@ -132,6 +146,7 @@ public class EventTableGateway {
                 + COLUMN_ENDDATE + " = ?, "
                 + COLUMN_MAXCAPACITY + " = ?, "
                 + COLUMN_PRICE + " = ? "
+                + COLUMN_LOCATION_ID + " = ?"
                 + " WHERE " + COLUMN_EVENTID + " = ?";
         //insert values
         stmt = mConnection.prepareStatement(query);
@@ -142,7 +157,14 @@ public class EventTableGateway {
         stmt.setDate(5, e.getEndDate());
         stmt.setInt(6, e.getMaxCapacity());
         stmt.setDouble(7, e.getPrice());
-        stmt.setInt(8, e.getEventID());
+        lId = e.getLocationID();
+        if (lId == -1) {
+            stmt.setNull(8, java.sql.Types.INTEGER);
+        }
+        else {
+            stmt.setInt(8, lId);
+        }
+        stmt.setInt(9, e.getEventID());
 
         numRowsAffected = stmt.executeUpdate();
         //boolean value of true/false is returned dependeing on how many rows are affected

@@ -13,8 +13,9 @@ public class Event {
     private Date endDate;
     private int maxCapacity;
     private double price;
+    private int locationID;
 
-    public Event(int eventID, String t, String d, Date sd, Time tm, Date ed, int mc, double p) {
+    public Event(int eventID, String t, String d, Date sd, Time tm, Date ed, int mc, double p, int lId) {
         this.eventID = eventID;
         this.title = t;
         this.description = d;
@@ -23,10 +24,11 @@ public class Event {
         this.endDate = ed;
         this.maxCapacity = mc;
         this.price = p;
+        this.locationID = lId;
     }
 
-    public Event(String t, String d, Date sd, Time tm, Date ed, int mc, double p) {
-        this(-1, t, d, sd, tm, ed, mc, p);
+    public Event(String t, String d, Date sd, Time tm, Date ed, int mc, double p, int lId) {
+        this(-1, t, d, sd, tm, ed, mc, p, lId);
     }
 
     public int getEventID() {
@@ -91,5 +93,13 @@ public class Event {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+    
+    public int getLocationID() {
+        return locationID;
+    }
+    
+    public void setLocationID(int locationID) {
+        this.locationID = locationID;
     }
 }

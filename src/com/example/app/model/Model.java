@@ -19,15 +19,19 @@ public class Model {
     }
 
     private List<Event> events;
+    private List<Location> locations;
     private EventTableGateway gateway;
+    private LocationTableGateway locationGateway;
 
     private Model() {
 
         try {
             Connection conn = DBConnection.getInstance();
             this.gateway = new EventTableGateway(conn);
+            this.locationGateway = new LocationTableGateway(conn);
 
             this.events = this.gateway.getEvents();
+            this.locations = this.locationGateway.getLocations();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
