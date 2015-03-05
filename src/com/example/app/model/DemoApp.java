@@ -48,21 +48,7 @@ public class DemoApp {
                 case 2: {
                     //prompts user an option to delete 
                     System.out.println("Deleting event");
-                    System.out.println("Enter the id of the event to delete");
-                    //variable is read as a string and parsed into a double
-                    int id = Integer.parseInt(keyboard.nextLine());
-                    Event p;
-                    //seperate method used to decipher which event to delete
-                    p = model.findEventById(id);
-                    if (p != null) {
-                        if (model.removeEvent(p)) {
-                            System.out.println("Event deleted");
-                        } else {
-                            System.out.println("Event not deleted");
-                        }
-                    } else {
-                        System.out.println("Event not found");
-                    }
+                    deleteEvent(keyboard, model);
 
                     break;
                 }
@@ -103,11 +89,12 @@ public class DemoApp {
     //this code allows me to read an event and store it in a database
 
     private static Event readEvent(Scanner keyb) {
-        String Title, Description;
-        int MaxCapacity;
+        String title, description;
+        int maxCapacity;
         Date startDate, endDate;
         Time time;
-        double Price;
+        double price;
+        int locationID;
         String line;
 
         java.util.Date now = new java.util.Date();
@@ -115,8 +102,8 @@ public class DemoApp {
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
         //user enters details of event into the prompts 
-        Title = getString(keyb, "Enter title: ");
-        Description = getString(keyb, "Enter description: ");
+        title = getString(keyb, "Enter title: ");
+        description = getString(keyb, "Enter description: ");
 
         line = getString(keyb, "enter start date (YYYY-MM-DD): ");
         try {
@@ -140,13 +127,15 @@ public class DemoApp {
         }
 
         line = getString(keyb, "enter maximum capacity: ");
-        MaxCapacity = Integer.parseInt(line);
+        maxCapacity = Integer.parseInt(line);
         line = getString(keyb, "enter price: ");
-        Price = Double.parseDouble(line);
+        price = Double.parseDouble(line);
+        line = getString(keyb, "enter location id: ");
+        locationID = Integer.parseInt(line);
 
-        Event e
-                = new Event(Title, Description, startDate,
-                        time, endDate, MaxCapacity, Price);
+        Event e = 
+            new Event(title, description, startDate,
+                        time, endDate, maxCapacity, price, locationID);
 
         return e;
     }
@@ -178,69 +167,75 @@ public class DemoApp {
     //EDIT EVENT
     private static void editEventDetails(Scanner keyb, Event e) {
         String title, description;
-        int maxCapacity;
+        int maxCapacity, locationID;
         Date startDate, endDate;
         Time time;
         double price;
-        String line1, line2, line3, line4, line5;
+        String line1, line2, line3, line4, line5, line6;
 
         java.util.Date now = new java.util.Date();
         //formats type time and date
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
         //where user will enter details to edit
-        line1 = getString(keyb, "Enter title [" + e.getTitle() + "]: ");
-        line5 = getString(keyb, "Enter description [" + e.getDescription() + "]: ");
-
-        line2 = getString(keyb, "enter start date (YYYY-MM-DD): ");
-
-        line3 = getString(keyb, "enter time (HH:MM:SS): ");
-
-        line4 = getString(keyb, "Enter end date (YYYY-MM-DD): ");
+        title = getString(keyb, "Enter title [" + e.getTitle() + "]: ");
+        description = getString(keyb, "Enter description [" + e.getDescription() + "]: ");
+        line1 = getString(keyb, "enter start date (YYYY-MM-DD) [" + e.getStartDate() + "]: ");
+        line2 = getString(keyb, "enter time (HH:MM:SS) [" + e.getTime() + "]: ");
+        line3 = getString(keyb, "Enter end date (YYYY-MM-DD) [" + e.getEndDate() + "]: ");
+        line4 = getString(keyb, "enter maximum capacity: ");
+        line5 = getString(keyb, "enter price: ");
+        line6 = getString(keyb, "Enter location id [" + e.getLocationID() + "]: ");
+        
         //if the details of the event have been atlered then it becomes the new value
+        if (title.length() != 0) {
+            e.setTitle(title);
+        }
+
+        if (description.length() != 0) {
+            e.setDescription(description);
+        }
+
         if (line1.length() != 0) {
-            e.setTitle(line1);
-        }
-
-        if (line5.length() != 0) {
-            e.setDescription(line5);
-        }
-
-        if (line2.length() != 0) {
             try {
-                startDate = new Date(dateFormatter.parse(line2).getTime());
+                startDate = new Date(dateFormatter.parse(line1).getTime());
             } catch (ParseException ex) {
                 startDate = new Date(now.getTime());
             }
             e.setStartDate(startDate);
         }
 
-        if (line3.length() != 0) {
+        if (line2.length() != 0) {
             try {
-                time = new Time(timeFormatter.parse(line3).getTime());
+                time = new Time(timeFormatter.parse(line2).getTime());
             } catch (ParseException ex) {
                 time = new Time(now.getTime());
             }
             e.setTime(time);
         }
 
-        if (line4.length() != 0) {
+        if (line3.length() != 0) {
             try {
-                endDate = new Date(dateFormatter.parse(line4).getTime());
+                endDate = new Date(dateFormatter.parse(line3).getTime());
             } catch (ParseException ex) {
                 endDate = new Date(now.getTime());
             }
             e.setEndDate(endDate);
         }
 
-        if (line1.length() != 0) {
-            maxCapacity = Integer.parseInt(line1);
+        if (line4.length() != 0) {
+            maxCapacity = Integer.parseInt(line4);
             e.setMaxCapacity(maxCapacity);
         }
 
         if (line5.length() != 0) {
             price = Double.parseDouble(line5);
             e.setPrice(price);
+        }
+        
+        if (line6.length() != 0) {
+            locationID = Integer.parseInt(line6);
+            e.setLocationID(locationID);
         }
     }
 

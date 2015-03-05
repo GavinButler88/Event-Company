@@ -49,7 +49,7 @@ public class Model {
         try {
             int id = this.gateway.insertEvent(
                     e.getTitle(), e.getDescription(), e.getStartDate(),
-                    e.getTime(), e.getEndDate(), e.getMaxCapacity(), e.getPrice());
+                    e.getTime(), e.getEndDate(), e.getMaxCapacity(), e.getPrice(), e.getLocationID());
             e.setEventID(id);
             this.events.add(e);
         } catch (SQLException ex) {
