@@ -1,4 +1,4 @@
-//a
+//
 package com.example.app.model;
 
 public class Location {
