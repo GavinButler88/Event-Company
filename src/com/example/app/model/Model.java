@@ -44,7 +44,6 @@ public class Model {
     }
 
     //completes process of adding event to the database
-
     public void addEvent(Event e) {
         try {
             int id = this.gateway.insertEvent(
@@ -58,7 +57,6 @@ public class Model {
     }
 
     //method to remove event
-
     public boolean removeEvent(Event p) {
         boolean removed = false;
 
@@ -109,4 +107,78 @@ public class Model {
         return updated;
 
     }
+
+
+public boolean addLocation(Location l) {
+        boolean result = false;
+        try {
+            int lid = this.locationGateway.insertLocation(l.getNameOfLocation(), l.getAddress(), l.getMaxCapacity(), l.getLocationManagerName(), l.getLocationManagerAddress(), l.getLocationManagerNumber());
+            if (lid != -1) {
+                l.setLocationId(lid);
+                this.locations.add(l);
+                result = true;
+            
+
 }
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(Model.class  
+
+.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+
+public boolean removeLocation(Location l) {
+        boolean removed = false;
+
+        try {
+            removed = this.locationGateway.deleteLocation(l.getLocationId());
+            if (removed) {
+                removed = this.locations.remove(l);
+            }
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return removed;
+    }
+
+ public List<Location> getLocation() {
+        return this.locations;
+    }
+ 
+ Location findLocationById(int Locationid) {
+        Location l = null;
+        int i = 0;
+        boolean found = false;
+        while (i < this.locations.size() && !found) {
+            l = this.locations.get(i);
+            if (l.getLocationId()== Locationid) {
+                found = true;
+            } else {
+                i++;
+            }
+        }
+        if (!found) {
+            l = null;
+        }
+        return l;
+    }
+ 
+  boolean updateLocation(Location l) {
+        boolean updated = false;
+
+        try {
+            updated = this.locationGateway.updateLocation(l);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return updated;
+    }
+}
+

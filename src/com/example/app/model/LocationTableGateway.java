@@ -144,7 +144,7 @@ public class LocationTableGateway {
         stmt.setInt(3, l.getMaxCapacity());
         stmt.setString(4, l.getLocationManagerName());
         stmt.setString(5, l.getLocationManagerAddress());
-        stmt.setInt(6, l.getLocationManagerNumber());
+        stmt.setString(6, l.getLocationManagerNumber());
         stmt.setInt(7, l.getLocationId());
 
         // execute the query
