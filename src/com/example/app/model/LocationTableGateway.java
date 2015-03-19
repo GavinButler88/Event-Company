@@ -90,8 +90,8 @@ public class LocationTableGateway {
         List<Location> locations;         // the java.util.List containing the location objects created for each row
         // in the result of the query the id of a manager
         
-        String address, maxCapacity, locationManagerName, locationManagerAddress, locationManagerNumber;
-        int lid;
+        String nameOfLocation, address, locationManagerName, locationManagerAddress, locationManagerNumber;
+        int locationId, maxCapacity;
         Location l;                   // a Manager object created from a row in the result of the query
 
         // execute an SQL SELECT statement to get a java.util.ResultSet representing
@@ -105,15 +105,16 @@ public class LocationTableGateway {
         // empty ArrayList
         locations = new ArrayList<Location>();
         while (rs.next()) {
-            locationid = rs.getInt(COLUMN_LOCATIONID);
+            locationId = rs.getInt(COLUMN_LOCATIONID);
+            nameOfLocation = rs.getString(COLUMN_NAMEOFLOCATION);
             address = rs.getString(COLUMN_ADDRESS);
-            maxCapacity = rs.getString(COLUMN_MAXCAPACITY);
+            maxCapacity = rs.getInt(COLUMN_MAXCAPACITY);
             locationManagerName = rs.getString(COLUMN_LOCATIONMANAGERNAME);
             locationManagerAddress = rs.getString(COLUMN_LOCATIONMANAGERADDRESS);
             locationManagerNumber = rs.getString(COLUMN_LOCATIONMANAGERNUMBER);
             
 
-            l = new Location(locationId, address, maxCapacity, locationManagerName, locationManagerAddress, locationManagerNumber);
+            l = new Location(nameOfLocation, address, maxCapacity, locationManagerName, locationManagerAddress, locationManagerNumber);
             locations.add(l);
         }
 
@@ -128,6 +129,7 @@ public class LocationTableGateway {
 
         // the required SQL INSERT statement with place holders for the values to be inserted into the database
         query = "UPDATE " + TABLE_NAME + " SET " +
+                COLUMN_NAMEOFLOCATION     + " = ?, " +
                 COLUMN_ADDRESS     + " = ?, " +
                 COLUMN_MAXCAPACITY    + " = ?, " +
                 COLUMN_LOCATIONMANAGERNAME + " = ? " +
@@ -137,12 +139,13 @@ public class LocationTableGateway {
 
         // create a PreparedStatement object to execute the query and insert the new values into the query
         stmt = mConnection.prepareStatement(query);
-        stmt.setString(1, l.getAddress());
-        stmt.setString(2, l.getMaxCapacity());
-        stmt.setString(3, l.getLocationManagerName());
-        stmt.setString(4, l.getLocationManagerAddress());
-        stmt.setString(5, l.getLocationManagerNumber());
-        stmt.setInt(6, l.getLocationId());
+        stmt.setString(1, l.getNameOfLocation());
+        stmt.setString(2, l.getAddress());
+        stmt.setInt(3, l.getMaxCapacity());
+        stmt.setString(4, l.getLocationManagerName());
+        stmt.setString(5, l.getLocationManagerAddress());
+        stmt.setInt(6, l.getLocationManagerNumber());
+        stmt.setInt(7, l.getLocationId());
 
         // execute the query
         numRowsAffected = stmt.executeUpdate();

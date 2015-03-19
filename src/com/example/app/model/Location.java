@@ -9,9 +9,9 @@ public class Location {
     private int maxCapacity;
     private String locationManagerName;
     private String locationManagerAddress;
-    private int locationManagerNumber;
+    private String locationManagerNumber;
     
-    public Location(int lid, String nol, String a, int max, String lmn, String lma, int lmno) {
+    public Location(int lid, String nol, String a, int max, String lmn, String lma, String lmno) {
         this.locationId = lid;
         this.nameOfLocation = nol;
         this.address = a;
@@ -21,7 +21,7 @@ public class Location {
         this.locationManagerNumber = lmno;
     }
     
-    public Location(String nol, String a, int max, String lmn, String lma, int lmno) {
+    public Location(String nol, String a, int max, String lmn, String lma, String lmno) {
             this(-1, nol, a, max, lmn, lma, lmno);
     }
 
@@ -73,11 +73,11 @@ public class Location {
         this.locationManagerAddress = locationManagerAddress;
     }
 
-    public int getLocationManagerNumber() {
+    public String getLocationManagerNumber() {
         return locationManagerNumber;
     }
 
-    public void setLocationManagerNumber(int locationManagerNumber) {
+    public void setLocationManagerNumber(String locationManagerNumber) {
         this.locationManagerNumber = locationManagerNumber;
     }
 }
