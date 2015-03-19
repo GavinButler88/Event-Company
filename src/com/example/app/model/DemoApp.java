@@ -27,7 +27,8 @@ public class DemoApp {
             System.out.println("2. Delete existing Event");
             System.out.println("3. Edit Events");
             System.out.println("4. View all Events");
-            System.out.println("5. Exit");
+            System.out.println("5. View all Locations");
+            System.out.println("6. Exit");
             System.out.println();
                //where the user will input their choice of method
             // methods contained elsewhere on page
@@ -63,8 +64,13 @@ public class DemoApp {
                     viewEvents(model);
                     break;
                 }
+                case 5: {
+                    System.out.println("Viewing locations");
+                    viewLocations(model);
+                    break;
+                }
             }
-        } while (opt != 5);
+        } while (opt != 6);
         System.out.println("Goodbye");
     }
 
@@ -263,6 +269,53 @@ public class DemoApp {
             System.out.println("There are no events in your database");
         }
         System.out.println();
+    }
+    
+     private static void viewLocations(Model model) {
+        List<Location> locations = model.getLocation();
+        System.out.println();
+        if (!locations.isEmpty()) {
+            //formats the table appropriately
+            System.out.printf("%5s %20s  %30s  %25s  %22s  %20s %20s\n", "ID", "Name of Location", "Address", "Capacity", "Manager Name", "Manager Address", "ManagerNumber");
+            for (Location l : locations) {
+                System.out.printf("%5d %20s  %30s  %25s  %22s  %20s %20d\n",
+                        l.getLocationId(),
+                        l.getNameOfLocation(),
+                        l.getAddress(),
+                        l.getMaxCapacity(),
+                        l.getLocationManagerName(),
+                        l.getLocationManagerAddress(),
+                        l.getLocationManagerNumber());
+
+            }
+        } else {
+            System.out.println("There are no locations in your database");
+        }
+        System.out.println();
+    }
+     
+     private static Location readLocation(Scanner keyb) {
+        String nameOfLocation, address, locationManagerName, locationManagerAddress, locationManagerNumber;
+        int maxCapacity;
+        int locationID;
+        String line;
+        
+        //user enters details of event into the prompts 
+        nameOfLocation = getString(keyb, "Enter name of location: ");
+        address = getString(keyb, "Enter address: ");
+        locationManagerName = getString(keyb, "Enter manager name: ");
+        locationManagerAddress = getString(keyb, "Enter manager address: ");
+        locationManagerNumber = getString(keyb, "Enter manager number: ");
+        line = getString(keyb, "enter maximum capacity: ");
+        maxCapacity = Integer.parseInt(line);
+        line = getString(keyb, "enter location id: ");
+        locationID = Integer.parseInt(line);
+
+        Location l = 
+            new Location(nameOfLocation, address, maxCapacity,
+                        locationManagerName, locationManagerAddress, locationManagerNumber, locationID);
+
+        return l;
     }
 
 }
