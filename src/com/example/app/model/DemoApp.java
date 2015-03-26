@@ -252,9 +252,9 @@ public class DemoApp {
         System.out.println();
         if (!events.isEmpty()) {
             //formats the table appropriately
-            System.out.printf("%5s %20s  %30s  %25s  %22s  %20s %20s %18s\n", "ID", "Title", "Description", "Start Date", "Time", "End Date", "Max Capacity", "Price");
+            System.out.printf("%5s %20s  %30s  %25s  %22s  %20s %20s %18s %5s\n", "ID", "Title", "Description", "Start Date", "Time", "End Date", "Max Capacity", "Price", "Locationid");
             for (Event ev : events) {
-                System.out.printf("%5d %20s  %30s  %25s  %22s  %20s %20d %18.2f\n",
+                System.out.printf("%5d %20s  %30s  %25s  %22s  %20s %20d %18.2f %5s\n",
                         ev.getEventID(),
                         ev.getTitle(),
                         ev.getDescription(),
@@ -262,7 +262,8 @@ public class DemoApp {
                         ev.getTime(),
                         ev.getEndDate(),
                         ev.getMaxCapacity(),
-                        ev.getPrice());
+                        ev.getPrice(),
+                        ev.getLocationID());
 
             }
         } else {
