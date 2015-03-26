@@ -73,8 +73,8 @@ public class EventTableGateway {
             id = keys.getInt(1);
         }
 
-        // return the Programmer object created or null if there was a problem
-        return id;
+        // return the Programmer object created or null if there was a problem 
+       return id;
     }
 
     //get method to retrieve all events in the database

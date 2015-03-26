@@ -277,9 +277,9 @@ public class DemoApp {
         System.out.println();
         if (!locations.isEmpty()) {
             //formats the table appropriately
-            System.out.printf("%5s %20s  %30s  %25s  %22s  %20s %20s\n", "ID", "Name of Location", "Address", "Capacity", "Manager Name", "Manager Address", "ManagerNumber");
+            System.out.printf("%5s %10s %20s  %30s  %30s  %30s  %30s \n", "ID", "Name of Location", "Address", "Capacity", "Manager Name", "Manager Address", "ManagerNumber");
             for (Location l : locations) {
-                System.out.printf("%5d %20s  %30s  %25s  %22s  %20s %20d\n",
+                System.out.printf("%5s %10s %20s  %30s  %30s  %30s  %30s \n",
                         l.getLocationId(),
                         l.getNameOfLocation(),
                         l.getAddress(),
@@ -294,11 +294,39 @@ public class DemoApp {
         }
         System.out.println();
     }
+    
+     /*private static void viewLocation(Scanner keyboard, Model model) {
+        int id = getLocation(keyboard, "Enter the id of the location to view:", -1);
+        Location l;
+
+        m = model.findManagerById(id);
+        System.out.println();
+        if (m != null) {
+            System.out.println("Name      : " + m.getName());
+            System.out.println("Office    : " + m.getOffice());
+            System.out.println("Extension : " + m.getExtension());
+
+            List<Programmer> programmerList = model.getProgrammersByManagerId(m.getId());
+            System.out.println();
+            if (programmerList.isEmpty()) {
+                System.out.println("This manager manages no programmers");
+            }
+            else {
+                System.out.println("This manager manages the following programmers:");
+                System.out.println();
+                displayProgrammers(programmerList, model);
+            }
+            System.out.println();
+        }
+        else {
+            System.out.println("Manager not found");
+        }
+        System.out.println();
+    }*/
      
      private static Location readLocation(Scanner keyb) {
         String nameOfLocation, address, locationManagerName, locationManagerAddress, locationManagerNumber;
-        int maxCapacity;
-        int locationID;
+        int maxCapacity,  locationID;
         String line;
         
         //user enters details of event into the prompts 
@@ -313,8 +341,8 @@ public class DemoApp {
         locationID = Integer.parseInt(line);
 
         Location l = 
-            new Location(nameOfLocation, address, maxCapacity,
-                        locationManagerName, locationManagerAddress, locationManagerNumber, locationID);
+            new Location(locationID, nameOfLocation, address, maxCapacity,
+                        locationManagerName, locationManagerAddress, locationManagerNumber);
 
         return l;
     }

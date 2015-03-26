@@ -25,7 +25,7 @@ public class LocationTableGateway {
         mConnection = connection;
     }
 
-    public int insertLocation(String nol, String a, String max, String lmn, String lma, String lmno) throws SQLException {
+    public int insertLocation(String nol, String a, int max, String lmn, String lma, String lmno) throws SQLException {
         String query;                   // the SQL query to execute
         PreparedStatement stmt;         // the java.sql.PreparedStatement object used to execute the SQL query
         int numRowsAffected;
@@ -45,7 +45,7 @@ public class LocationTableGateway {
         stmt = mConnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         stmt.setString(1, nol);
         stmt.setString(2, a);
-        stmt.setString(3, max);
+        stmt.setInt(3, max);
         stmt.setString(4, lmn);
         stmt.setString(5, lma);
         stmt.setString(6, lmno);

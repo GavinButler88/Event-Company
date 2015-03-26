@@ -108,29 +108,25 @@ public class Model {
 
     }
 
-
-public boolean addLocation(Location l) {
+    public boolean addLocation(Location l) {
         boolean result = false;
         try {
-            int lid = this.locationGateway.insertLocation(l.getNameOfLocation(), l.getAddress(), l.getMaxCapacity(), l.getLocationManagerName(), l.getLocationManagerAddress(), l.getLocationManagerNumber());
+            int lid = this.locationGateway.insertLocation(
+                    l.getNameOfLocation(), l.getAddress(), l.getMaxCapacity(), l.getLocationManagerName(), l.getLocationManagerAddress(), l.getLocationManagerNumber());
             if (lid != -1) {
                 l.setLocationId(lid);
                 this.locations.add(l);
                 result = true;
-            
 
-}
-        }
-        catch (SQLException ex) {
-            Logger.getLogger(Model.class  
-
-.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
 
-
-public boolean removeLocation(Location l) {
+    public boolean removeLocation(Location l) {
         boolean removed = false;
 
         try {
@@ -138,25 +134,24 @@ public boolean removeLocation(Location l) {
             if (removed) {
                 removed = this.locations.remove(l);
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return removed;
     }
 
- public List<Location> getLocation() {
+    public List<Location> getLocation() {
         return this.locations;
     }
- 
- Location findLocationById(int Locationid) {
+
+    Location findLocationById(int Locationid) {
         Location l = null;
         int i = 0;
         boolean found = false;
         while (i < this.locations.size() && !found) {
             l = this.locations.get(i);
-            if (l.getLocationId()== Locationid) {
+            if (l.getLocationId() == Locationid) {
                 found = true;
             } else {
                 i++;
@@ -167,18 +162,16 @@ public boolean removeLocation(Location l) {
         }
         return l;
     }
- 
-  boolean updateLocation(Location l) {
+
+    boolean updateLocation(Location l) {
         boolean updated = false;
 
         try {
             updated = this.locationGateway.updateLocation(l);
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return updated;
     }
 }
-
