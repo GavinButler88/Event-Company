@@ -28,7 +28,10 @@ public class DemoApp {
             System.out.println("3. Edit Events");
             System.out.println("4. View all Events");
             System.out.println("5. View all Locations");
-            System.out.println("6. Exit");
+            System.out.println("6. Create new Location");
+            System.out.println("7. Delete existing Location");
+            System.out.println("8. Edit Locations");
+            System.out.println("9. Exit");
             System.out.println();
                //where the user will input their choice of method
             // methods contained elsewhere on page
@@ -69,8 +72,28 @@ public class DemoApp {
                     viewLocations(model);
                     break;
                 }
+                
+                case 6: {
+                        System.out.println("Creating location");
+                        Location l = readLocation(keyboard);
+                        model.addLocation(l);
+                    }
+                
+                 case 7: {
+                    //prompts user an option to delete 
+                    System.out.println("Deleting location");
+                    deleteLocation(keyboard, model);
+
+                    break;
+                }
+                 
+                  case 8: {
+                        System.out.println("Editing locations");
+                        editLocation(keyboard, model);
+                        break;
+                    }
             }
-        } while (opt != 6);
+        } while (opt != 9);
         System.out.println("Goodbye");
     }
 
@@ -92,6 +115,22 @@ public class DemoApp {
         }
     }
 
+    private static void editLocation(Scanner kb, Model m) {
+        System.out.println("Enter the id of the location you want to edit: ");
+        int id = Integer.parseInt(kb.nextLine());
+        Location l;
+
+        l = m.findLocationById(id);
+        //if price entered in not 0 then run other methods
+        if (l != null) {
+            editLocationDetails(kb, l);
+            if (m.updateLocation(l)) {
+                System.out.println("Location updated");
+            } else {
+                System.out.println("Location not updated");
+            }
+        }
+    }
     //this code allows me to read an event and store it in a database
 
     private static Event readEvent(Scanner keyb) {
@@ -173,11 +212,11 @@ public class DemoApp {
     //EDIT EVENT
     private static void editEventDetails(Scanner keyb, Event e) {
         String title, description;
-        int maxCapacity, locationID;
+        int maxCapacity;
         Date startDate, endDate;
         Time time;
         double price;
-        String line1, line2, line3, line4, line5, line6;
+        String line1, line2, line3, line4, line5;
 
         java.util.Date now = new java.util.Date();
         //formats type time and date
@@ -191,7 +230,7 @@ public class DemoApp {
         line3 = getString(keyb, "Enter end date (YYYY-MM-DD) [" + e.getEndDate() + "]: ");
         line4 = getString(keyb, "enter maximum capacity: ");
         line5 = getString(keyb, "enter price: ");
-        line6 = getString(keyb, "Enter location id [" + e.getLocationID() + "]: ");
+        //line6 = getString(keyb, "Enter location id [" + e.getLocationID() + "]: ");
         
         //if the details of the event have been atlered then it becomes the new value
         if (title.length() != 0) {
@@ -239,10 +278,10 @@ public class DemoApp {
             e.setPrice(price);
         }
         
-        if (line6.length() != 0) {
-            locationID = Integer.parseInt(line6);
-            e.setLocationID(locationID);
-        }
+        //if (line6.length() != 0) {
+          //  locationID = Integer.parseInt(line6);
+          // e.setLocationID(locationID);
+       // }
     }
 
     //VIEW EVENT
@@ -346,5 +385,98 @@ public class DemoApp {
 
         return l;
     }
+     
+     private static void editLocationDetails(Scanner keyb, Location l) {
+        String nameOfLocation, address, locationManagerName, locationManagerAddress, locationManagerNumber;
+        int maxCapacity;
+        String line1;
+
+        java.util.Date now = new java.util.Date();
+        
+        //where user will enter details to edit
+        nameOfLocation = getString(keyb, "Enter name of location [" + l.getNameOfLocation() + "]: ");
+        address = getString(keyb, "Enter address [" + l.getAddress() + "]: ");
+        locationManagerName = getString(keyb, "enter name of manger [" + l.getLocationManagerName() + "]: ");
+        locationManagerAddress = getString(keyb, "enter address of manager [" + l.getLocationManagerAddress() + "]: ");
+        locationManagerNumber = getString(keyb, "Enter manager number [" + l.getLocationManagerNumber() + "]: ");
+        line1 = getString(keyb, "enter maximum capacity: ");
+        //line6 = getString(keyb, "Enter location id [" + e.getLocationID() + "]: ");
+        
+        //if the details of the event have been atlered then it becomes the new value
+        if (nameOfLocation.length() != 0) {
+            l.setNameOfLocation(nameOfLocation);
+        }
+
+        if (address.length() != 0) {
+            l.setAddress(address);
+        }
+
+       if (line1.length() != 0) {
+            maxCapacity = Integer.parseInt(line1);
+            l.setMaxCapacity(maxCapacity);
+        }
+
+       if (locationManagerName.length() != 0) {
+            l.setLocationManagerName(locationManagerName);
+        }
+       
+       if (locationManagerAddress.length() != 0) {
+            l.setLocationManagerAddress(locationManagerAddress);
+        }
+       
+       if (locationManagerAddress.length() != 0) {
+            l.setLocationManagerAddress(locationManagerAddress);
+        }
+     }
+        
+        
+        //if (line6.length() != 0) {
+          //  locationID = Integer.parseInt(line6);
+          // e.setLocationID(locationID);
+       // }
+       
+         private static void deleteLocation(Scanner keyboard, Model model) {
+        int id = getInt(keyboard, "Enter the id of the location to delete:", -1);
+        Location l;
+
+        l = model.findLocationById(id);
+        if (l != null) {
+            if (model.removeLocation(l)) {
+                System.out.println("Location deleted");
+            }
+            else {
+                System.out.println("Location not deleted");
+            }
+        }
+        else {
+            System.out.println("Location not found");
+        }
+    }
+    
+          private static int getInt(Scanner keyb, String prompt, int defaultValue) {
+        int opt = defaultValue;
+        boolean finished = false;
+
+        do {
+            try {
+                System.out.print(prompt);
+                String line = keyb.nextLine();
+                if (line.length() > 0) {
+                    opt = Integer.parseInt(line);
+                }
+                finished = true;
+            }
+            catch (NumberFormatException e) {
+                System.out.println("Exception: " + e.getMessage());
+            }
+        }
+        while (!finished);
+
+        return opt;
+    }
+
+
+     
+      
 
 }

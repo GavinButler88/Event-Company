@@ -145,7 +145,7 @@ public class Model {
         return this.locations;
     }
 
-    Location findLocationById(int Locationid) {
+    public Location findLocationById(int Locationid) {
         Location l = null;
         int i = 0;
         boolean found = false;
@@ -174,4 +174,6 @@ public class Model {
 
         return updated;
     }
+    
+    
 }
