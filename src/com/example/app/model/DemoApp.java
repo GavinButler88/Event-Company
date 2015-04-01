@@ -318,8 +318,8 @@ public class DemoApp {
             //formats the table appropriately
             System.out.printf("%5s %10s %20s  %30s  %30s  %30s  %30s \n", "ID", "Name of Location", "Address", "Capacity", "Manager Name", "Manager Address", "ManagerNumber");
             for (Location l : locations) {
-                System.out.printf("%5s %10s %20s  %30s  %30s  %30s  %30s \n",
-                        l.getLocationId(),
+                System.out.printf("%5d %10s %20s  %30s  %30s  %30s  %30s \n",
+                        l.getLocationID(),
                         l.getNameOfLocation(),
                         l.getAddress(),
                         l.getMaxCapacity(),

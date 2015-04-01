@@ -29,7 +29,7 @@ public class LocationTableGateway {
         String query;                   // the SQL query to execute
         PreparedStatement stmt;         // the java.sql.PreparedStatement object used to execute the SQL query
         int numRowsAffected;
-        int lid = -1;
+        int lid = 1;
 
         // the required SQL INSERT statement with place holders for the values to be inserted into the database
         query = "INSERT INTO " + TABLE_NAME + " ("
@@ -91,7 +91,7 @@ public class LocationTableGateway {
         // in the result of the query the id of a manager
         
         String nameOfLocation, address, locationManagerName, locationManagerAddress, locationManagerNumber;
-        int locationId, maxCapacity;
+        int locationID, maxCapacity;
         Location l;                   // a Manager object created from a row in the result of the query
 
         // execute an SQL SELECT statement to get a java.util.ResultSet representing
@@ -105,7 +105,7 @@ public class LocationTableGateway {
         // empty ArrayList
         locations = new ArrayList<Location>();
         while (rs.next()) {
-            locationId = rs.getInt(COLUMN_LOCATIONID);
+            locationID = rs.getInt(COLUMN_LOCATIONID);
             nameOfLocation = rs.getString(COLUMN_NAMEOFLOCATION);
             address = rs.getString(COLUMN_ADDRESS);
             maxCapacity = rs.getInt(COLUMN_MAXCAPACITY);
@@ -114,7 +114,7 @@ public class LocationTableGateway {
             locationManagerNumber = rs.getString(COLUMN_LOCATIONMANAGERNUMBER);
             
 
-            l = new Location(nameOfLocation, address, maxCapacity, locationManagerName, locationManagerAddress, locationManagerNumber);
+            l = new Location(locationID, nameOfLocation, address, maxCapacity, locationManagerName, locationManagerAddress, locationManagerNumber);
             locations.add(l);
         }
 
@@ -145,7 +145,7 @@ public class LocationTableGateway {
         stmt.setString(4, l.getLocationManagerName());
         stmt.setString(5, l.getLocationManagerAddress());
         stmt.setString(6, l.getLocationManagerNumber());
-        stmt.setInt(7, l.getLocationId());
+        stmt.setInt(7, l.getLocationID());
 
         // execute the query
         numRowsAffected = stmt.executeUpdate();

@@ -114,7 +114,7 @@ public class Model {
             int lid = this.locationGateway.insertLocation(
                     l.getNameOfLocation(), l.getAddress(), l.getMaxCapacity(), l.getLocationManagerName(), l.getLocationManagerAddress(), l.getLocationManagerNumber());
             if (lid != -1) {
-                l.setLocationId(lid);
+                l.setLocationID(lid);
                 this.locations.add(l);
                 result = true;
 
@@ -126,11 +126,12 @@ public class Model {
         return result;
     }
 
+    
     public boolean removeLocation(Location l) {
         boolean removed = false;
 
         try {
-            removed = this.locationGateway.deleteLocation(l.getLocationId());
+            removed = this.locationGateway.deleteLocation(l.getLocationID());
             if (removed) {
                 removed = this.locations.remove(l);
             }
@@ -145,13 +146,13 @@ public class Model {
         return this.locations;
     }
 
-    public Location findLocationById(int Locationid) {
+    public Location findLocationById(int LocationID) {
         Location l = null;
         int i = 0;
         boolean found = false;
         while (i < this.locations.size() && !found) {
             l = this.locations.get(i);
-            if (l.getLocationId() == Locationid) {
+            if (l.getLocationID() == LocationID) {
                 found = true;
             } else {
                 i++;

@@ -3,7 +3,7 @@ package com.example.app.model;
 
 public class Location {
     
-    private int locationId;
+    private int locationID;
     private String nameOfLocation;
     private String address;
     private int maxCapacity;
@@ -12,7 +12,7 @@ public class Location {
     private String locationManagerNumber;
     
     public Location(int lid, String nol, String a, int max, String lmn, String lma, String lmno) {
-        this.locationId = lid;
+        this.locationID = lid;
         this.nameOfLocation = nol;
         this.address = a;
         this.maxCapacity = max;
@@ -25,12 +25,12 @@ public class Location {
             this(-1, nol, a, max, lmn, lma, lmno);
     }
 
-    public int getLocationId() {
-        return locationId;
+    public int getLocationID() {
+        return locationID;
     }
 
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
+    public void setLocationID(int locationID) {
+        this.locationID = locationID;
     }
     
 

@@ -21,7 +21,7 @@ public class EventTableGateway {
     private static final String COLUMN_ENDDATE = "EndDate";
     private static final String COLUMN_MAXCAPACITY = "MaxCapacity";
     private static final String COLUMN_PRICE = "Price";
-    private static final String COLUMN_LOCATION_ID = "LocationID";
+    private static final String COLUMN_LOCATIONID = "LocationID";
 
     private Connection mConnection;
 
@@ -44,7 +44,7 @@ public class EventTableGateway {
                 + COLUMN_ENDDATE + ", "
                 + COLUMN_MAXCAPACITY + ", "
                 + COLUMN_PRICE + ", "
-                + COLUMN_LOCATION_ID                 
+                + COLUMN_LOCATIONID                 
                 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         // create a PreparedStatement object to execute the query and insert the values into the query
@@ -113,7 +113,7 @@ public class EventTableGateway {
             endDate = rs.getDate(COLUMN_ENDDATE);
             maxCapacity = rs.getInt(COLUMN_MAXCAPACITY);
             price = rs.getDouble(COLUMN_PRICE);
-            locationID = rs.getInt(COLUMN_LOCATION_ID);
+            locationID = rs.getInt(COLUMN_LOCATIONID);
             if (rs.wasNull()) {
                 locationID = -1;
             }
@@ -141,7 +141,7 @@ public class EventTableGateway {
                 + COLUMN_ENDDATE + " = ?, "
                 + COLUMN_MAXCAPACITY + " = ?, "
                 + COLUMN_PRICE + " = ? "
-                + COLUMN_LOCATION_ID + " = ?"
+                + COLUMN_LOCATIONID + " = ?"
                 + " WHERE " + COLUMN_EVENTID + " = ?";
         //insert values
         stmt = mConnection.prepareStatement(query);
