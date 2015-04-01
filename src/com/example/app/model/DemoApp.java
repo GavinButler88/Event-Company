@@ -52,7 +52,7 @@ public class DemoApp {
                 case 2: {
                     //prompts user an option to delete 
                     System.out.println("Deleting event");
-                    deleteEvent(keyboard, model);
+                    deleteEvent(model, keyboard);
 
                     break;
                 }
@@ -82,7 +82,7 @@ public class DemoApp {
                  case 7: {
                     //prompts user an option to delete 
                     System.out.println("Deleting location");
-                    deleteLocation(keyboard, model);
+                    deleteLocation(model, keyboard);
 
                     break;
                 }
@@ -192,21 +192,23 @@ public class DemoApp {
         return keyboard.nextLine();
     }
 
-    private static void deleteEvent(Scanner kb, Model m) {
-        System.out.print("Enter price of the event to delete:");
-        int id = Integer.parseInt(kb.nextLine());
-        Event p;
+    private static void deleteEvent(Model model, Scanner keyboard) {
+          System.out.println("Enter the id number of the product to delete:");
+            int id = Integer.parseInt(keyboard.nextLine());
+            Event e;
 
-        p = m.findEventById(id);
-        if (p != null) {
-            if (m.removeEvent(p)) {
-                System.out.println("Event deleted");
-            } else {
-                System.out.println("Event not deleted");
+            e = model.findEventById(id);
+            if (e != null) {
+                if(model.removeEvent(e)) {
+                    System.out.println("Product deleted");
+                }
+                else{
+                    System.out.println("Event not deleted");
+                }
             }
-        } else {
-            System.out.println("Event not found");
-        }
+            else {
+                System.out.println("Event not found");
+            }
     }
 
     //EDIT EVENT
@@ -434,23 +436,25 @@ public class DemoApp {
           //  locationID = Integer.parseInt(line6);
           // e.setLocationID(locationID);
        // }
+     
        
-         private static void deleteLocation(Scanner keyboard, Model model) {
-        int id = getInt(keyboard, "Enter the id of the location to delete:", -1);
-        Location l;
+        private static void deleteLocation(Model model, Scanner keyboard) {
+          System.out.println("Enter the id number of the location to delete:");
+            int id = Integer.parseInt(keyboard.nextLine());
+            Location l;
 
-        l = model.findLocationById(id);
-        if (l != null) {
-            if (model.removeLocation(l)) {
-                System.out.println("Location deleted");
+            l = model.findLocationById(id);
+            if (l != null) {
+                if(model.removeLocation(l)) {
+                    System.out.println("Location deleted");
+                }
+                else{
+                    System.out.println("Location not deleted");
+                }
             }
             else {
-                System.out.println("Location not deleted");
+                System.out.println("Location not found");
             }
-        }
-        else {
-            System.out.println("Location not found");
-        }
     }
     
           private static int getInt(Scanner keyb, String prompt, int defaultValue) {
