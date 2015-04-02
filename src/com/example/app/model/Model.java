@@ -11,7 +11,7 @@ public class Model {
 
     private static Model instance = null;
 
-    public static synchronized Model getInstance() {
+    public static synchronized Model getInstance() throws DataAccessException {
         if (instance == null) {
             instance = new Model();
         }
@@ -23,7 +23,7 @@ public class Model {
     private EventTableGateway gateway;
     private LocationTableGateway locationGateway;
 
-    private Model() {
+    private Model() throws DataAccessException {
 
         try {
             Connection conn = DBConnection.getInstance();
@@ -33,9 +33,9 @@ public class Model {
             this.events = this.gateway.getEvents();
             this.locations = this.locationGateway.getLocations();
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception initialising Model object" + ex.getMessage());
         } catch (SQLException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception initialising Model object" + ex.getMessage());
         }
     }
 
@@ -54,7 +54,7 @@ public class Model {
     }
 
     //completes process of adding event to the database
-    public void addEvent(Event e) {
+    public void addEvent(Event e) throws DataAccessException {
         try {
             int id = this.gateway.insertEvent(
                     e.getTitle(), e.getDescription(), e.getStartDate(),
@@ -62,12 +62,12 @@ public class Model {
             e.setEventID(id);
             this.events.add(e);
         } catch (SQLException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception adding event" + ex.getMessage());
         }
     }
 
     //method to remove event
-    public boolean removeEvent(Event p) {
+    public boolean removeEvent(Event p) throws DataAccessException {
         boolean removed = false;
 
         try {       //use gateway object to try remove event
@@ -76,7 +76,7 @@ public class Model {
                 removed = this.events.remove(p);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception removing event" + ex.getMessage());
         }
         //boolean returns true if event is deleted from database and array list
         return removed;
@@ -104,21 +104,21 @@ public class Model {
     }
 
     //UPDATE EVENT
-    boolean updateEvent(Event e) {
+    boolean updateEvent(Event e) throws DataAccessException {
         boolean updated = false;
 
         try {
             //method calls on gateway update method which returns true/false value and is then returned
             updated = this.gateway.updateEvent(e);
         } catch (SQLException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception updating event" + ex.getMessage());
         }
 
         return updated;
 
     }
 
-    public boolean addLocation(Location l) {
+    public boolean addLocation(Location l) throws DataAccessException {
         boolean result = false;
         try {
             int lid = this.locationGateway.insertLocation(
@@ -130,14 +130,13 @@ public class Model {
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Model.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception adding event" + ex.getMessage());
         }
         return result;
     }
 
     
-    public boolean removeLocation(Location l) {
+    public boolean removeLocation(Location l) throws DataAccessException {
         boolean removed = false;
 
         try {
@@ -146,7 +145,7 @@ public class Model {
                 removed = this.locations.remove(l);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception removing location" + ex.getMessage());
         }
 
         return removed;
@@ -174,13 +173,13 @@ public class Model {
         return l;
     }
 
-    boolean updateLocation(Location l) {
+    boolean updateLocation(Location l) throws DataAccessException {
         boolean updated = false;
 
         try {
             updated = this.locationGateway.updateLocation(l);
         } catch (SQLException ex) {
-            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DataAccessException("Exception updating location" + ex.getMessage());
         }
 
         return updated;

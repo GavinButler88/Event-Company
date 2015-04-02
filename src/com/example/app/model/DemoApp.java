@@ -13,109 +13,115 @@ import java.util.logging.Logger;
 
 public class DemoApp {
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         Scanner keyboard = new Scanner(System.in);
 
-        Model model = Model.getInstance();
+        Model model;
 
         Event e;
 
         int opt = 11;
         do {
             //user interface menu
-            System.out.println(" 1. Create new Event");
-            System.out.println(" 2. Delete existing Event");
-            System.out.println(" 3. Edit Events");
-            System.out.println(" 4. View all Events");
-            System.out.println(" 5. View single Event");
-            System.out.println();
-            System.out.println(" 6. View all Locations");
-            System.out.println(" 7. Create new Location");
-            System.out.println(" 8. Delete existing Location");
-            System.out.println(" 9. Edit Locations");
-            System.out.println(" 10. View single Location");
-            System.out.println();
-            System.out.println(" 11. Exit");
-            System.out.println();
-               //where the user will input their choice of method
-            // methods contained elsewhere on page
-            System.out.print("Enter option: ");
-            String line = keyboard.nextLine();
-            opt = Integer.parseInt(line);
-            //cases which allow user to manipulate databese
-            System.out.println("You chose option " + opt);
-            //switch used to print message to user based on their selection
-            switch (opt) { //
-                case 1: {
-                    System.out.println("Creating event");
-                    Event p = readEvent(keyboard);
-                    model.addEvent(p);
+            try {
+                model = Model.getInstance();
+                System.out.println(" 1. Create new Event");
+                System.out.println(" 2. Delete existing Event");
+                System.out.println(" 3. Edit Events");
+                System.out.println(" 4. View all Events");
+                System.out.println(" 5. View single Event");
+                System.out.println();
+                System.out.println(" 6. View all Locations");
+                System.out.println(" 7. Create new Location");
+                System.out.println(" 8. Delete existing Location");
+                System.out.println(" 9. Edit Locations");
+                System.out.println(" 10. View single Location");
+                System.out.println();
+                System.out.println(" 11. Exit");
+                System.out.println();
+                   //where the user will input their choice of method
+                // methods contained elsewhere on page
+                opt = getInt(keyboard, "Enter option: ");
+                //cases which allow user to manipulate databese
+                System.out.println("You chose option " + opt);
+                //switch used to print message to user based on their selection
+                switch (opt) { //
+                    case 1: {
+                        System.out.println("Creating event");
+                        Event p = readEvent(keyboard);
+                        model.addEvent(p);
 
-                    break;
-                }
-                case 2: {
-                    //prompts user an option to delete 
-                    System.out.println("Deleting event");
-                    deleteEvent(model, keyboard);
-
-                    break;
-                }
-
-                case 3: {
-                    System.out.println("Editing event");
-                    editEvent(keyboard, model);
-                    break;
-                }
-                case 4: {
-                    System.out.println("Viewing events");
-                    viewEvents(model);
-                    break;
-                }
-                
-                 case 5: {
-                    System.out.println("Viewing single event");
-                    viewEvent(model, keyboard);
-                    break;
-                }
-                 
-                case 6: {
-                    System.out.println("Viewing locations");
-                    viewLocations(model);
-                    break;
-                }
-                
-                case 7: {
-                        System.out.println("Creating location");
-                        Location l = readLocation(keyboard);
-                        model.addLocation(l);
-                    }
-                
-                 case 8: {
-                    //prompts user an option to delete 
-                    System.out.println("Deleting location");
-                    deleteLocation(model, keyboard);
-
-                    break;
-                }
-                 
-                  case 9: {
-                        System.out.println("Editing locations");
-                        editLocation(keyboard, model);
                         break;
                     }
-                  
-                  case 10: {
-                    System.out.println("Viewing location");
-                    viewLocation(model, keyboard);
-                    break;
+                    case 2: {
+                        //prompts user an option to delete 
+                        System.out.println("Deleting event");
+                        deleteEvent(model, keyboard);
+
+                        break;
+                    }
+
+                    case 3: {
+                        System.out.println("Editing event");
+                        editEvent(keyboard, model);
+                        break;
+                    }
+                    case 4: {
+                        System.out.println("Viewing events");
+                        viewEvents(model);
+                        break;
+                    }
+
+                     case 5: {
+                        System.out.println("Viewing single event");
+                        viewEvent(model, keyboard);
+                        break;
+                    }
+
+                    case 6: {
+                        System.out.println("Viewing locations");
+                        viewLocations(model);
+                        break;
+                    }
+
+                    case 7: {
+                            System.out.println("Creating location");
+                            Location l = readLocation(keyboard);
+                            model.addLocation(l);
+                        }
+
+                     case 8: {
+                        //prompts user an option to delete 
+                        System.out.println("Deleting location");
+                        deleteLocation(model, keyboard);
+
+                        break;
+                    }
+
+                      case 9: {
+                            System.out.println("Editing locations");
+                            editLocation(keyboard, model);
+                            break;
+                        }
+
+                      case 10: {
+                        System.out.println("Viewing location");
+                        viewLocation(model, keyboard);
+                        break;
+                    }
                 }
+            }
+            catch (DataAccessException d) {
+                System.out.println();
+                System.out.println(d.getMessage());
+                System.out.println();
             }
         } while (opt != 11);
         System.out.println("Goodbye");
     }
 
     //allows user to edit an event
-    private static void editEvent(Scanner kb, Model m) {
+    private static void editEvent(Scanner kb, Model m) throws DataAccessException {
         System.out.println("Enter the id of the event you want to edit: ");
         int id = Integer.parseInt(kb.nextLine());
         Event e;
@@ -132,7 +138,7 @@ public class DemoApp {
         }
     }
 
-    private static void editLocation(Scanner kb, Model m) {
+    private static void editLocation(Scanner kb, Model m) throws DataAccessException {
         System.out.println("Enter the id of the location you want to edit: ");
         int id = Integer.parseInt(kb.nextLine());
         Location l;
@@ -209,7 +215,7 @@ public class DemoApp {
         return keyboard.nextLine();
     }
 
-    private static void deleteEvent(Model model, Scanner keyboard) {
+    private static void deleteEvent(Model model, Scanner keyboard) throws DataAccessException {
           System.out.println("Enter the id number of the product to delete:");
             int id = Integer.parseInt(keyboard.nextLine());
             Event e;
@@ -538,7 +544,7 @@ public class DemoApp {
        // }
      
        
-        private static void deleteLocation(Model model, Scanner keyboard) {
+        private static void deleteLocation(Model model, Scanner keyboard) throws DataAccessException {
           System.out.println("Enter the id number of the location to delete:");
             int id = Integer.parseInt(keyboard.nextLine());
             Location l;
@@ -555,21 +561,41 @@ public class DemoApp {
             else {
                 System.out.println("Location not found");
             }
-    }
+        }
     
-          private static int getInt(Scanner keyb, String prompt, int defaultValue) {
-        int opt = defaultValue;
+        private static int getInt(Scanner keyb, String prompt) {
+        int opt = 0;
         boolean finished = false;
 
         do {
             try {
                 System.out.print(prompt);
                 String line = keyb.nextLine();
-                if (line.length() > 0) {
-                    opt = Integer.parseInt(line);
-                }
+                opt = Integer.parseInt(line);
                 finished = true;
             }
+            
+            catch (NumberFormatException e) {
+                System.out.println("Exception: " + e.getMessage());
+            }
+        }
+        while (!finished);
+
+        return opt;
+    }
+        
+        private static double getDouble(Scanner keyb, String prompt) {
+        double opt = 0;
+        boolean finished = false;
+
+        do {
+            try {
+                System.out.print(prompt);
+                String line = keyb.nextLine();
+                opt = Double.parseDouble(line);
+                finished = true;
+            }
+            
             catch (NumberFormatException e) {
                 System.out.println("Exception: " + e.getMessage());
             }
