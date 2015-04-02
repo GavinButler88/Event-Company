@@ -6,12 +6,17 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DemoApp {
+    
+    private static final int TITLE_ORDER = 1;
+    private static final int PRICE_ORDER = 2;
 
     public static void main(String[] args)  {
         Scanner keyboard = new Scanner(System.in);
@@ -20,7 +25,7 @@ public class DemoApp {
 
         Event e;
 
-        int opt = 11;
+        int opt = 12;
         do {
             //user interface menu
             try {
@@ -29,15 +34,16 @@ public class DemoApp {
                 System.out.println(" 2. Delete existing Event");
                 System.out.println(" 3. Edit Events");
                 System.out.println(" 4. View all Events");
-                System.out.println(" 5. View single Event");
+                System.out.println(" 5. View all Events by Price");
+                System.out.println(" 6. View single Event");
                 System.out.println();
-                System.out.println(" 6. View all Locations");
-                System.out.println(" 7. Create new Location");
-                System.out.println(" 8. Delete existing Location");
-                System.out.println(" 9. Edit Locations");
-                System.out.println(" 10. View single Location");
+                System.out.println(" 7. View all Locations");
+                System.out.println(" 8. Create new Location");
+                System.out.println(" 9. Delete existing Location");
+                System.out.println(" 10. Edit Locations");
+                System.out.println(" 11. View single Location");
                 System.out.println();
-                System.out.println(" 11. Exit");
+                System.out.println(" 12. Exit");
                 System.out.println();
                    //where the user will input their choice of method
                 // methods contained elsewhere on page
@@ -68,29 +74,35 @@ public class DemoApp {
                     }
                     case 4: {
                         System.out.println("Viewing events");
-                        viewEvents(model);
+                        viewEvents(model, TITLE_ORDER);
+                        break;
+                    }
+                    
+                     case 5: {
+                        System.out.println("Viewing events by price");
+                        viewEvents(model, PRICE_ORDER);
                         break;
                     }
 
-                     case 5: {
+                     case 6: {
                         System.out.println("Viewing single event");
                         viewEvent(model, keyboard);
                         break;
                     }
 
-                    case 6: {
+                    case 7: {
                         System.out.println("Viewing locations");
                         viewLocations(model);
                         break;
                     }
 
-                    case 7: {
+                    case 8: {
                             System.out.println("Creating location");
                             Location l = readLocation(keyboard);
                             model.addLocation(l);
                         }
 
-                     case 8: {
+                     case 9: {
                         //prompts user an option to delete 
                         System.out.println("Deleting location");
                         deleteLocation(model, keyboard);
@@ -98,13 +110,13 @@ public class DemoApp {
                         break;
                     }
 
-                      case 9: {
+                      case 10: {
                             System.out.println("Editing locations");
                             editLocation(keyboard, model);
                             break;
                         }
 
-                      case 10: {
+                      case 11: {
                         System.out.println("Viewing location");
                         viewLocation(model, keyboard);
                         break;
@@ -116,7 +128,7 @@ public class DemoApp {
                 System.out.println(d.getMessage());
                 System.out.println();
             }
-        } while (opt != 11);
+        } while (opt != 12);
         System.out.println("Goodbye");
     }
 
@@ -340,28 +352,21 @@ public class DemoApp {
 
     //VIEW EVENT
     //prints table of events to the user
-    private static void viewEvents(Model model) {
+    private static void viewEvents(Model model, int order) {
         List<Event> events = model.getEvents();
         System.out.println();
-        if (!events.isEmpty()) {
-            System.out.printf("%5s %20s  %30s  %25s  %22s  %20s %20s %18s %20s\n", "ID", "Title", "Description", "Start Date", "Time", "End Date", "Max Capacity", "Price", "Locationid");
-            for (Event ev : events) {
-                Location l = model.findLocationById(ev.getLocationID());
-                System.out.printf("%5d %20s  %30s  %25s  %22s  %20s %20d %18.2f %20s\n",
-                        ev.getEventID(),
-                        ev.getTitle(),
-                        ev.getDescription(),
-                        ev.getStartDate(),
-                        ev.getTime(),
-                        ev.getEndDate(),
-                        ev.getMaxCapacity(),
-                        ev.getPrice(),
-                        (l != null) ? l.getNameOfLocation() : "");
-
-            }
+        if (events.isEmpty()) {
+            System.out.println("There are no events in the database");
             
         } else {
-           System.out.println("There are no events in your database");
+           if( order == TITLE_ORDER) {
+            Collections.sort(events);
+           }
+           else if( order == PRICE_ORDER) {
+               Comparator<Event> cmptr = new EventPriceComparator();
+               Collections.sort(events, cmptr);
+        }
+           displayEvents(events, model);
         }
         System.out.println();
     }
