@@ -3,7 +3,7 @@ package com.example.app.model;
 import java.sql.Date;
 import java.sql.Time;
 
-public class Event {
+public class Event implements Comparable<Event> {
 
     private int eventID;
     private String title;
@@ -101,5 +101,13 @@ public class Event {
     
     public void setLocationID(int locationID) {
         this.locationID = locationID;
+    }
+
+    @Override
+    public int compareTo(Event that) {
+       String myTitle = this.getTitle();
+       String yourTitle = that.getTitle();
+       
+       return myTitle.compareTo(yourTitle);
     }
 }

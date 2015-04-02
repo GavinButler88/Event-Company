@@ -47,7 +47,7 @@ public class DemoApp {
                 System.out.println();
                    //where the user will input their choice of method
                 // methods contained elsewhere on page
-                opt = getInt(keyboard, "Enter option: ");
+                opt = getInt(keyboard, "Enter option: ",13);
                 //cases which allow user to manipulate databese
                 System.out.println("You chose option " + opt);
                 //switch used to print message to user based on their selection
@@ -134,8 +134,7 @@ public class DemoApp {
 
     //allows user to edit an event
     private static void editEvent(Scanner kb, Model m) throws DataAccessException {
-        System.out.println("Enter the id of the event you want to edit: ");
-        int id = Integer.parseInt(kb.nextLine());
+        int id = getInt(kb, "Enter the id number of the event to edit:",-1); 
         Event e;
 
         e = m.findEventById(id);
@@ -151,8 +150,7 @@ public class DemoApp {
     }
 
     private static void editLocation(Scanner kb, Model m) throws DataAccessException {
-        System.out.println("Enter the id of the location you want to edit: ");
-        int id = Integer.parseInt(kb.nextLine());
+        int id = getInt(kb, "Enter the id number of the location to edit:", -1);
         Location l;
 
         l = m.findLocationById(id);
@@ -206,12 +204,10 @@ public class DemoApp {
             endDate = new Date(now.getTime());
         }
 
-        line = getString(keyb, "enter maximum capacity: ");
-        maxCapacity = Integer.parseInt(line);
-        line = getString(keyb, "enter price: ");
-        price = Double.parseDouble(line);
-        line = getString(keyb, "enter location id: ");
-        locationID = Integer.parseInt(line);
+        maxCapacity = getInt(keyb, "enter maximum capacity: ", 0);
+        price = getDouble(keyb, "enter price: ", 0);
+        
+        locationID = getInt(keyb, "enter location id: ", -1);
 
         Event e = 
             new Event(title, description, startDate,
@@ -228,9 +224,8 @@ public class DemoApp {
     }
 
     private static void deleteEvent(Model model, Scanner keyboard) throws DataAccessException {
-          System.out.println("Enter the id number of the product to delete:");
-            int id = Integer.parseInt(keyboard.nextLine());
-            Event e;
+        int id = getInt(keyboard, "Enter the id number of the event to delete:", -1); 
+        Event e;
 
             e = model.findEventById(id);
             if (e != null) {
@@ -267,8 +262,8 @@ public class DemoApp {
         line1 = getString(keyb, "enter start date (YYYY-MM-DD) [" + e.getStartDate() + "]: ");
         line2 = getString(keyb, "enter time (HH:MM:SS) [" + e.getTime() + "]: ");
         line3 = getString(keyb, "Enter end date (YYYY-MM-DD) [" + e.getEndDate() + "]: ");
-        line4 = getString(keyb, "enter maximum capacity: ");
-        line5 = getString(keyb, "enter price: ");
+        maxCapacity = getInt(keyb, "enter maximum capacity [" + e.getMaxCapacity() + "] : ", -1);
+        price = getDouble(keyb, "enter price [" + e.getPrice() + "] : ", 0);
         //line6 = getString(keyb, "Enter location id [" + e.getLocationID() + "]: ");
         
         //if the details of the event have been atlered then it becomes the new value
@@ -307,13 +302,11 @@ public class DemoApp {
             e.setEndDate(endDate);
         }
 
-        if (line4.length() != 0) {
-            maxCapacity = Integer.parseInt(line4);
+        if (maxCapacity != e.getMaxCapacity()) {
             e.setMaxCapacity(maxCapacity);
         }
 
-        if (line5.length() != 0) {
-            price = Double.parseDouble(line5);
+        if (price != e.getPrice()) {
             e.setPrice(price);
         }
         
@@ -324,8 +317,7 @@ public class DemoApp {
     }
     
     private static void viewEvent(Model model, Scanner keyboard) {
-          System.out.println("Enter the id number of the event you want to view:");
-            int id = Integer.parseInt(keyboard.nextLine());
+          int id = getInt(keyboard, "Enter the id number of the event to view:", -1);
             Event e;
 
             e = model.findEventById(id);
@@ -344,7 +336,7 @@ public class DemoApp {
                     
                 }
                 else{
-                    System.out.println("Event not deleted");
+                    System.out.println("No such event");
                 }
             }
             
@@ -465,8 +457,7 @@ public class DemoApp {
     }
      
      private static void viewLocation(Model model, Scanner keyboard) {
-      System.out.println("Enter the id number of the location to view:");
-        int id = Integer.parseInt(keyboard.nextLine());
+      int id = getInt(keyboard, "Enter the id number of the location to view:", -1);
             Location l;
 
             l = model.findLocationById(id);
@@ -512,7 +503,7 @@ public class DemoApp {
         locationManagerName = getString(keyb, "enter name of manger [" + l.getLocationManagerName() + "]: ");
         locationManagerAddress = getString(keyb, "enter address of manager [" + l.getLocationManagerAddress() + "]: ");
         locationManagerNumber = getString(keyb, "Enter manager number [" + l.getLocationManagerNumber() + "]: ");
-        line1 = getString(keyb, "enter maximum capacity: ");
+        maxCapacity = getInt(keyb, "Enter maxCapacity [" + l.getMaxCapacity() + "]: ",0);
         //line6 = getString(keyb, "Enter location id [" + e.getLocationID() + "]: ");
         
         //if the details of the event have been atlered then it becomes the new value
@@ -524,8 +515,7 @@ public class DemoApp {
             l.setAddress(address);
         }
 
-       if (line1.length() != 0) {
-            maxCapacity = Integer.parseInt(line1);
+       if (maxCapacity != l.getMaxCapacity()) {
             l.setMaxCapacity(maxCapacity);
         }
 
@@ -550,8 +540,8 @@ public class DemoApp {
      
        
         private static void deleteLocation(Model model, Scanner keyboard) throws DataAccessException {
-          System.out.println("Enter the id number of the location to delete:");
-            int id = Integer.parseInt(keyboard.nextLine());
+          
+          int id = getInt(keyboard, "Enter the id number of the location to delete:", -1);
             Location l;
 
             l = model.findLocationById(id);
@@ -568,15 +558,17 @@ public class DemoApp {
             }
         }
     
-        private static int getInt(Scanner keyb, String prompt) {
-        int opt = 0;
+        private static int getInt(Scanner keyb, String prompt, int defaultValue) {
+        int opt = defaultValue;
         boolean finished = false;
 
         do {
             try {
                 System.out.print(prompt);
                 String line = keyb.nextLine();
+                if(line.length()>0) {
                 opt = Integer.parseInt(line);
+                }
                 finished = true;
             }
             
@@ -589,15 +581,17 @@ public class DemoApp {
         return opt;
     }
         
-        private static double getDouble(Scanner keyb, String prompt) {
-        double opt = 0;
+        private static double getDouble(Scanner keyb, String prompt, double defaultValue) {
+        double opt = defaultValue;
         boolean finished = false;
 
         do {
             try {
                 System.out.print(prompt);
                 String line = keyb.nextLine();
+                 if(line.length()>0) {
                 opt = Double.parseDouble(line);
+                 }
                 finished = true;
             }
             
