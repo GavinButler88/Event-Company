@@ -42,6 +42,16 @@ public class Model {
     public List<Event> getEvents() {
         return this.events;
     }
+    
+    public List<Event> getEventsByLocationID(int locationID) {
+        List<Event> list = new ArrayList<Event>();
+        for (Event e : this.events) {
+            if (e.getLocationID() == locationID) {
+                list.add(e);
+            }
+        }
+        return list;
+    }
 
     //completes process of adding event to the database
     public void addEvent(Event e) {

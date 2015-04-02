@@ -128,14 +128,22 @@ public class LocationTableGateway {
         int numRowsAffected;
 
         // the required SQL INSERT statement with place holders for the values to be inserted into the database
-        query = "UPDATE " + TABLE_NAME + " SET " +
-                COLUMN_NAMEOFLOCATION     + " = ?, " +
-                COLUMN_ADDRESS     + " = ?, " +
-                COLUMN_MAXCAPACITY    + " = ?, " +
-                COLUMN_LOCATIONMANAGERNAME + " = ? " +
-                COLUMN_LOCATIONMANAGERADDRESS + " = ? " +
-                COLUMN_LOCATIONMANAGERNUMBER + " = ? " +
-                " WHERE " + COLUMN_LOCATIONID + " = ?";
+        query = "UPDATE " + TABLE_NAME + " SET " 
+                + COLUMN_NAMEOFLOCATION + " = ?, " 
+                + COLUMN_ADDRESS + " = ?, " 
+                + COLUMN_MAXCAPACITY + " = ?, " 
+                + COLUMN_LOCATIONMANAGERNAME + " = ? " 
+                + COLUMN_LOCATIONMANAGERADDRESS + " = ? " 
+                + COLUMN_LOCATIONMANAGERNUMBER + " = ? " 
+                + " WHERE " + COLUMN_LOCATIONID + " = ?";
+        
+        //query = "UPDATE " + TABLE_NAME + " SET "
+          //      + COLUMN_NAME + " = ?, "
+            //    + COLUMN_DESCRIPTION + " = ?, "
+              //  + COLUMN_COST_PRICE + " = ?, "
+             //   + COLUMN_SALE_PRICE + " = ?, "
+             //   + COLUMN_QUANTITY + " = ? "                
+             //   + " WHERE " + COLUMN_ID + " = ?";
 
         // create a PreparedStatement object to execute the query and insert the new values into the query
         stmt = mConnection.prepareStatement(query);

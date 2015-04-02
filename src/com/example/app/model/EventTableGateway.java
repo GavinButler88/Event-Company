@@ -141,7 +141,6 @@ public class EventTableGateway {
                 + COLUMN_ENDDATE + " = ?, "
                 + COLUMN_MAXCAPACITY + " = ?, "
                 + COLUMN_PRICE + " = ? "
-                + COLUMN_LOCATIONID + " = ?"
                 + " WHERE " + COLUMN_EVENTID + " = ?";
         //insert values
         stmt = mConnection.prepareStatement(query);
@@ -152,14 +151,8 @@ public class EventTableGateway {
         stmt.setDate(5, e.getEndDate());
         stmt.setInt(6, e.getMaxCapacity());
         stmt.setDouble(7, e.getPrice());
-        lId = e.getLocationID();
-        if (lId == -1) {
-            stmt.setNull(8, java.sql.Types.INTEGER);
-        }
-        else {
-            stmt.setInt(8, lId);
-        }
-        stmt.setInt(9, e.getEventID());
+        
+        stmt.setInt(8, e.getEventID());
 
         numRowsAffected = stmt.executeUpdate();
         //boolean value of true/false is returned dependeing on how many rows are affected

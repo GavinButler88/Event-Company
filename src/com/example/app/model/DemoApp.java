@@ -20,18 +20,22 @@ public class DemoApp {
 
         Event e;
 
-        int opt;
+        int opt = 11;
         do {
             //user interface menu
-            System.out.println("1. Create new Event");
-            System.out.println("2. Delete existing Event");
-            System.out.println("3. Edit Events");
-            System.out.println("4. View all Events");
-            System.out.println("5. View all Locations");
-            System.out.println("6. Create new Location");
-            System.out.println("7. Delete existing Location");
-            System.out.println("8. Edit Locations");
-            System.out.println("9. Exit");
+            System.out.println(" 1. Create new Event");
+            System.out.println(" 2. Delete existing Event");
+            System.out.println(" 3. Edit Events");
+            System.out.println(" 4. View all Events");
+            System.out.println(" 5. View single Event");
+            System.out.println();
+            System.out.println(" 6. View all Locations");
+            System.out.println(" 7. Create new Location");
+            System.out.println(" 8. Delete existing Location");
+            System.out.println(" 9. Edit Locations");
+            System.out.println(" 10. View single Location");
+            System.out.println();
+            System.out.println(" 11. Exit");
             System.out.println();
                //where the user will input their choice of method
             // methods contained elsewhere on page
@@ -67,19 +71,26 @@ public class DemoApp {
                     viewEvents(model);
                     break;
                 }
-                case 5: {
+                
+                 case 5: {
+                    System.out.println("Viewing single event");
+                    viewEvent(model, keyboard);
+                    break;
+                }
+                 
+                case 6: {
                     System.out.println("Viewing locations");
                     viewLocations(model);
                     break;
                 }
                 
-                case 6: {
+                case 7: {
                         System.out.println("Creating location");
                         Location l = readLocation(keyboard);
                         model.addLocation(l);
                     }
                 
-                 case 7: {
+                 case 8: {
                     //prompts user an option to delete 
                     System.out.println("Deleting location");
                     deleteLocation(model, keyboard);
@@ -87,13 +98,19 @@ public class DemoApp {
                     break;
                 }
                  
-                  case 8: {
+                  case 9: {
                         System.out.println("Editing locations");
                         editLocation(keyboard, model);
                         break;
                     }
+                  
+                  case 10: {
+                    System.out.println("Viewing location");
+                    viewLocation(model, keyboard);
+                    break;
+                }
             }
-        } while (opt != 9);
+        } while (opt != 11);
         System.out.println("Goodbye");
     }
 
@@ -210,6 +227,8 @@ public class DemoApp {
                 System.out.println("Event not found");
             }
     }
+    
+    
 
     //EDIT EVENT
     private static void editEventDetails(Scanner keyb, Event e) {
@@ -285,6 +304,33 @@ public class DemoApp {
           // e.setLocationID(locationID);
        // }
     }
+    
+    private static void viewEvent(Model model, Scanner keyboard) {
+          System.out.println("Enter the id number of the event you want to view:");
+            int id = Integer.parseInt(keyboard.nextLine());
+            Event e;
+
+            e = model.findEventById(id);
+            System.out.println();
+            if (e != null) {
+                    Location l = model.findLocationById(e.getLocationID());
+                    System.out.println("Title        : " + e.getTitle());
+                    System.out.println("Description  : " + e.getDescription());
+                    System.out.println("StartDate    : " + e.getStartDate());
+                    System.out.println("Time         : " + e.getTime());
+                    System.out.println("EndDate      : " + e.getEndDate());
+                    System.out.println("MaxCapacity  : " + e.getMaxCapacity());
+                    System.out.println("Price        : " + e.getPrice());
+                    System.out.println("Location     : " + ((l != null) ? l.getNameOfLocation() : ""));
+                    System.out.println();
+                    
+                }
+                else{
+                    System.out.println("Event not deleted");
+                }
+            }
+            
+    
 
     //VIEW EVENT
     //prints table of events to the user
@@ -292,10 +338,10 @@ public class DemoApp {
         List<Event> events = model.getEvents();
         System.out.println();
         if (!events.isEmpty()) {
-            //formats the table appropriately
-            System.out.printf("%5s %20s  %30s  %25s  %22s  %20s %20s %18s %5s\n", "ID", "Title", "Description", "Start Date", "Time", "End Date", "Max Capacity", "Price", "Locationid");
+            System.out.printf("%5s %20s  %30s  %25s  %22s  %20s %20s %18s %20s\n", "ID", "Title", "Description", "Start Date", "Time", "End Date", "Max Capacity", "Price", "Locationid");
             for (Event ev : events) {
-                System.out.printf("%5d %20s  %30s  %25s  %22s  %20s %20d %18.2f %5s\n",
+                Location l = model.findLocationById(ev.getLocationID());
+                System.out.printf("%5d %20s  %30s  %25s  %22s  %20s %20d %18.2f %20s\n",
                         ev.getEventID(),
                         ev.getTitle(),
                         ev.getDescription(),
@@ -304,13 +350,32 @@ public class DemoApp {
                         ev.getEndDate(),
                         ev.getMaxCapacity(),
                         ev.getPrice(),
-                        ev.getLocationID());
+                        (l != null) ? l.getNameOfLocation() : "");
 
             }
+            
         } else {
-            System.out.println("There are no events in your database");
+           System.out.println("There are no events in your database");
         }
         System.out.println();
+    }
+    
+    private static void displayEvents(List<Event> events, Model model) {
+        System.out.printf("%5s %20s  %30s  %25s  %22s  %20s %20s %18s %20s\n", "ID", "Title", "Description", "Start Date", "Time", "End Date", "Max Capacity", "Price", "Locationid");
+            for (Event ev : events) {
+                Location l = model.findLocationById(ev.getLocationID());
+                System.out.printf("%5d %20s  %30s  %25s  %22s  %20s %20d %18.2f %20s\n",
+                        ev.getEventID(),
+                        ev.getTitle(),
+                        ev.getDescription(),
+                        ev.getStartDate(),
+                        ev.getTime(),
+                        ev.getEndDate(),
+                        ev.getMaxCapacity(),
+                        ev.getPrice(),
+                        (l != null) ? l.getNameOfLocation() : "");
+
+            }
     }
     
      private static void viewLocations(Model model) {
@@ -386,6 +451,41 @@ public class DemoApp {
                         locationManagerName, locationManagerAddress, locationManagerNumber);
 
         return l;
+    }
+     
+     private static void viewLocation(Model model, Scanner keyboard) {
+      System.out.println("Enter the id number of the location to view:");
+        int id = Integer.parseInt(keyboard.nextLine());
+            Location l;
+
+            l = model.findLocationById(id);
+            System.out.println();
+            if (l != null) {
+                System.out.println("Name            : " + l.getNameOfLocation());
+                System.out.println("Address         : " + l.getAddress());
+                System.out.println("Max Capacity    : " + l.getMaxCapacity());
+                System.out.println("Manager Name    : " + l.getLocationManagerName());
+                System.out.println("Manager Address : " + l.getLocationManagerAddress());
+                System.out.println("Manager Number  : " + l.getLocationManagerNumber());
+                System.out.println();
+                
+                List<Event> eventList = model.getEventsByLocationID(l.getLocationID());
+                System.out.println();
+                if (eventList.isEmpty()) {
+                    System.out.println("This location has no events");
+                    System.out.println();
+                }
+                else {
+                    System.out.println("This location has the following events:");
+                    System.out.println();
+                    displayEvents(eventList, model);
+                    System.out.println();
+                }
+            }
+           
+            else {
+                System.out.println("Location not found");
+            }
     }
      
      private static void editLocationDetails(Scanner keyb, Location l) {
@@ -478,6 +578,7 @@ public class DemoApp {
 
         return opt;
     }
+
 
 
      
